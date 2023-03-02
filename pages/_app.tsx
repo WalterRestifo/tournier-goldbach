@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
     name: "",
   });
   const [allPlayers, setAllPlayers] = useState<Member[]>([]);
+  const [rounds, setRounds] = useState([]);
 
   async function getAllPlayers(): Promise<void> {
     try {
@@ -41,6 +42,8 @@ export default function App({ Component, pageProps }: AppProps) {
       setDesiredPlayer={setDesiredPlayer}
       allPlayers={allPlayers}
       setAllPlayers={setAllPlayers}
+      rounds={rounds}
+      setRounds={setRounds}
     />
   );
 }
