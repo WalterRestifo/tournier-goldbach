@@ -11,12 +11,14 @@ const teams = [
 let matches = [];
 
 describe("a function that take a group of teams and create matches for them", () => {
-  it(" should push 2 games in the match array, if given an array of length 4"),
-    () => {
-      matches = createAutomatedTournament(teams);
-      expect(matches).toHaveLength(2);
-    };
-  it("should use every team once", () => {
+  test(" should push 2 games in the match array, if given an array of length 4", () => {
+    matches = createAutomatedTournament(teams);
+    expect(matches).toHaveLength(2);
+  });
+});
+
+describe("a function that take a group of teams and create matches for them", () => {
+  test("should use every team once", () => {
     matches = createAutomatedTournament(teams);
     expect(matches).toEqual([
       [
