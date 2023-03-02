@@ -1,25 +1,18 @@
 import styled from "styled-components";
-import { CldImage } from "next-cloudinary";
 import { MiniPlayer } from "../interfaces/interfaces";
 import { nanoid } from "nanoid";
 import Image from "next/image";
 
 type CardProps = {
   name: string;
-  cloudinarySrc: string;
-  languages: string[];
-  gender: string;
-  skill: string;
+  tournaments: string[];
   id: string;
   isSelectable: boolean;
 };
 
 export default function Card({
   name,
-  cloudinarySrc,
-  languages,
-  gender,
-  skill,
+  tournaments,
   id,
   isSelectable,
 }: CardProps): JSX.Element {
@@ -51,23 +44,13 @@ export default function Card({
     });
   }
 
-  const player = { name: name, cloudinarySrc: cloudinarySrc };
+  const player = { name: name };
   return (
     <StyledDiv>
-      <StyledCldImage
-        width="100"
-        height="120"
-        src={cloudinarySrc}
-        alt={name}
-        priority={true}
-      />
-
       <p>{name}</p>
-      <p>{skill}</p>
-      <p>{gender}</p>
       <StyledUl>
-        {languages.map((language: string) => {
-          return <li key={language}>{language}</li>;
+        {tournaments.map((tournament: string) => {
+          return <li key={tournament}>{tournament}</li>;
         })}
       </StyledUl>
       <StyledDeleteButton
@@ -117,11 +100,6 @@ const StyledDeleteButton = styled.button`
 
 const StyledUl = styled.ul`
   list-style: none;
-`;
-
-const StyledCldImage = styled(CldImage)`
-  margin-top: 0.5em;
-  border-radius: 25px;
 `;
 
 const StyledAddToTeamButton = styled.button`

@@ -10,7 +10,7 @@ import ArrowNavigation from "../components/arrowNavigation";
 
 export default function TeamChoiceForm(): JSX.Element {
   const [teams, setTeams] = useState<[Team]>([
-    { players: [], points: 0, id: "", wins: 0, games: 0 },
+    { players: [], points: 0, id: "" },
   ]);
 
   useEffect(() => {

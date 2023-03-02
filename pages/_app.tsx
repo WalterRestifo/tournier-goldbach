@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import "../styles/globals.css";
+
 import { useState, useEffect } from "react";
 import { Criteria } from "../interfaces/interfaces";
 import { Member } from "../interfaces/interfaces";

@@ -11,10 +11,7 @@ export default async function handler(req, res) {
         return {
           name: player.name,
           id: player._id,
-          skill: player.skill,
-          languages: player.languages,
-          gender: player.gender,
-          cloudinarySrc: player.cloudinarySrc,
+          tournaments: player.tournaments,
         };
       });
 

@@ -4,8 +4,6 @@ const { Schema } = mongoose;
 
 const teamSchema = new Schema({
   players: [],
-  wins: { type: Number },
-  games: { type: Number },
   points: { type: Number },
   id: { type: String },
   name: { type: String },

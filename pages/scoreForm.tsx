@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Header from "../components/Header";
 import styled from "styled-components";
 import Link from "next/link";
@@ -13,15 +12,11 @@ export default function ScoreForm(): JSX.Element {
   const [team1, setTeam1] = useState<Team>({
     players: [],
     points: 0,
-    wins: 0,
-    games: 0,
     id: "",
   });
   const [team2, setTeam2] = useState<Team>({
     players: [],
     points: 0,
-    wins: 0,
-    games: 0,
     id: "",
   });
 
@@ -49,18 +44,15 @@ export default function ScoreForm(): JSX.Element {
     const team2Obj = team2;
     let winner = "";
     if (pointsTeam1 > pointsTeam2) {
-      team1Obj.wins += 1;
       winner = "Team 1";
     } else if (pointsTeam1 < pointsTeam2) {
-      team2Obj.wins += 1;
       winner = "Team 2";
     } else {
       return alert("Please enter a valid score");
     }
-    team1Obj.games += 1;
-    team2Obj.games += 1;
-    team1Obj.points += pointsTeam1;
-    team2Obj.points += pointsTeam2;
+
+    team1Obj.points = pointsTeam1;
+    team2Obj.points = pointsTeam2;
 
     async function postMatch(match: object) {
       try {
@@ -105,13 +97,7 @@ export default function ScoreForm(): JSX.Element {
             {team1 &&
               team1.players.length > 0 &&
               team1.players.map((player: MiniPlayer) => {
-                return (
-                  <MiniCard
-                    key={player.name + player.cloudinarySrc}
-                    name={player.name}
-                    cloudinarySrc={player.cloudinarySrc}
-                  />
-                );
+                return <MiniCard key={player.name} name={player.name} />;
               })}
 
             <label htmlFor="pointsTeam1">
@@ -133,13 +119,7 @@ export default function ScoreForm(): JSX.Element {
             <StyledP>Team 2</StyledP>
             {team2 &&
               team2.players.map((player: MiniPlayer) => {
-                return (
-                  <MiniCard
-                    key={player.name + player.cloudinarySrc}
-                    name={player.name}
-                    cloudinarySrc={player.cloudinarySrc}
-                  />
-                );
+                return <MiniCard key={player.name} name={player.name} />;
               })}
             <label htmlFor="pointsTeam2">
               {"Points: "}

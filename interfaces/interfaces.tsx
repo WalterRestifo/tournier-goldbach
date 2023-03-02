@@ -2,11 +2,8 @@ import { prototype } from "events";
 
 export interface Member {
   name: string;
-  skill: string;
-  languages: string[];
-  gender: string;
+  tournaments: string[];
   id?: any;
-  cloudinarySrc: string;
 }
 
 export interface Criteria {
@@ -18,15 +15,12 @@ export interface Criteria {
 
 export interface MiniPlayer {
   name: string;
-  cloudinarySrc: string;
 }
 
 export interface Team {
   players: [];
   points: number;
   id: string;
-  wins: number;
-  games: number;
 }
 
 export interface Match {

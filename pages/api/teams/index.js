@@ -10,10 +10,7 @@ export default async function handler(req, res) {
       const teamsArray = teams.map((team) => {
         return {
           players: team.players,
-          wins: team.wins,
-          games: team.games,
           id: team._id,
-          points: team.points,
         };
       });
 
