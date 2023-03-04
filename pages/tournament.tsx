@@ -16,24 +16,64 @@ type TournamentProps = {
 };
 
 export default function Tournament({ rounds, setRounds }: TournamentProps) {
+  const [isClicked, setIsClicked] = useState(false);
+
+  function handleClick() {
+    setIsClicked(!isClicked);
+  }
+
+  function handleNextRound(e: any, pointsTeam1: number, pointsTeam2: number) {
+    e.stopPropagation();
+
+    async function updateRound() {
+      return;
+    }
+
+    if (pointsTeam1 > pointsTeam2) {
+      updateRound();
+    }
+  }
+
+  async function postRound(
+    roundsArray: any[][],
+    nameOfTournament: String
+  ): Promise<any> {
+    try {
+      await fetch("/api/tournaments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rounds: roundsArray, name: nameOfTournament }),
+      });
+    } catch (error) {
+      console.error(
+        "Something went wrong with the post fetch of the round: ",
+        error
+      );
+    }
+  }
+
   useEffect(() => {
     async function getAllTeamsAndCreateTournament() {
       const teams = await getAllTeams();
       const matchList = createAutomatedTournament(teams);
       setRounds([matchList]);
+      postRound([matchList], "Goldbach");
     }
 
     async function getRounds(): Promise<any> {
       try {
-        const response = await fetch("/api/round");
+        const response = await fetch("/api/tournament");
         if (!response.ok) {
           return console.error(
             "Error with the response of the tournament fetch. Response status: ",
             response.status
           );
         } else {
-          const listOfRounds = await response.json();
-          return setRounds(listOfRounds);
+          const listOfTournaments = await response.json();
+          setRounds(listOfTournaments.rounds);
+          return;
         }
       } catch (error) {
         console.error("Something went wrong with the matches fetch: ", error);
@@ -42,6 +82,8 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
 
     if (rounds.length === 0) {
       getAllTeamsAndCreateTournament();
+    } else {
+      getRounds();
     }
   }, []);
   return (
@@ -68,11 +110,26 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
               <StyledUl data-cy="match-list" key={nanoid()}>
                 {round.map((match: Match, index: number) => {
                   return (
-                    <StyledMatch key={match.id}>
-                      <StyledP>Match {index + 1}</StyledP>
-                      <TeamComponent team={match.team1} isClickable={false} />
-                      <StyledP>vs</StyledP>
-                      <TeamComponent team={match.team2} isClickable={false} />
+                    <StyledMatch key={match.id} onClick={handleClick}>
+                      <StyledP>Spiel {index + 1}</StyledP>
+                      <TeamComponent team={match.team1} isClickable={true} />
+                      <StyledP>gegen</StyledP>
+                      <TeamComponent team={match.team2} isClickable={true} />
+                      {isClicked &&
+                        match.team1.points &&
+                        match.team2.points && (
+                          <button
+                            onClick={(e) =>
+                              handleNextRound(
+                                e,
+                                match.team1.points,
+                                match.team2.points
+                              )
+                            }
+                          >
+                            Bestätigen
+                          </button>
+                        )}
                     </StyledMatch>
                   );
                 })}
@@ -106,6 +163,7 @@ const StyledP = styled.p`
 
 const StyledMatchWrapperSection = styled.section`
   overflow-y: scroll;
+  overflow-x: scroll;
   border: 1px solid white;
   height: 65dvh;
   width: 100dvw;
@@ -114,7 +172,7 @@ const StyledMatchWrapperSection = styled.section`
 
 const StyledMatch = styled.li`
   position: relative;
-  width: 100vw;
+  width: 50dvw;
   margin-top: 1rem;
   /* From https://css.glass */
   background: rgba(255, 255, 255, 0.2);

@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import styled from "styled-components";
 import { MiniPlayer, Team } from "../interfaces/interfaces";
-import { useState } from "react";
 import MiniCard from "./MiniCard";
 
 type TeamProps = {
@@ -8,18 +8,59 @@ type TeamProps = {
   isClickable: boolean;
 };
 
-export default function TeamComponent({ team }: TeamProps): JSX.Element {
-  const [isSelected, setIsSelected] = useState(false);
+export default function TeamComponent({
+  team,
+  isClickable,
+}: TeamProps): JSX.Element {
+  const [isClicked, setIsClicked] = useState(false);
+
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    team.points = parseInt(form.elements.points.value);
+    console.log(team.points);
+  }
 
   return (
-    <StyledTeam onClick={() => setIsSelected(!isSelected)} key={team.id}>
-      <StyledMiniCardWrapper>
+    <StyledTeam
+      key={team.id}
+      onClick={(e) => {
+        setIsClicked(!isClicked);
+        e.stopPropagation();
+        return;
+      }}
+    >
+      <div>
         {team.players.map((player: MiniPlayer) => (
           <MiniCard key={player.name} name={player.name} />
         ))}
-      </StyledMiniCardWrapper>
+      </div>
       <StyledDataWrapper>
-        <StyledP>Points: {team.points}</StyledP>
+        {isClickable && isClicked ? (
+          <form onSubmit={handleSubmit}>
+            <label>
+              Punkte:{" "}
+              <StyledInput
+                onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                  e.stopPropagation()
+                }
+                type={"number"}
+                maxLength={2}
+                name="points"
+                placeholder={`${team.points}`}
+              ></StyledInput>
+            </label>
+            <button
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                e.stopPropagation()
+              }
+            >
+              Bestätigen
+            </button>
+          </form>
+        ) : (
+          <StyledP>Punkte: {team.points}</StyledP>
+        )}
       </StyledDataWrapper>
     </StyledTeam>
   );
@@ -55,13 +96,6 @@ const StyledDataWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-const StyledMiniCardWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 1rem;
-`;
-
 const StyledButton = styled.button`
   height: 7vh;
   width: 26.7vw;
@@ -77,4 +111,9 @@ const StyledButton = styled.button`
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(5px);
+`;
+
+const StyledInput = styled.input`
+  width: 2rem;
+  height: 1rem;
 `;
