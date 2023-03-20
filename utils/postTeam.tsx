@@ -10,9 +10,6 @@ export default async function postTeam(team: Team): Promise<void> {
       body: JSON.stringify(team),
     });
   } catch (error) {
-    console.error(
-      "Something went wrong with the matches in /games fetch: ",
-      error
-    );
+    console.error(error);
   }
 }

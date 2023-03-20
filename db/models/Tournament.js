@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const tournamentSchema = new Schema({
-  rounds: mongoose.Mixed,
-  name: { type: String, required: true },
+  name: { type: String },
+  rounds: [],
 });
 
 const Tournament =

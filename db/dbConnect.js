@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-// LOCAL: mongodb://localhost:27017/lean-coffee-board
-// DONNERSTAG IN DER CLOUD: mongodb+srv://username:password… <-- Nicht im Quellcode!!
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {

@@ -64,6 +64,7 @@ const StyledMain = styled.main`
 
   overflow-y: scroll;
   height: 70dvh;
+  border: 1px solid white;
 `;
 
 const StyledCardsWrapperSection = styled.section`

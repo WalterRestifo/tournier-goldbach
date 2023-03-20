@@ -18,7 +18,6 @@ export default function TeamComponent({
     e.preventDefault();
     const form = e.currentTarget;
     team.points = parseInt(form.elements.points.value);
-    console.log(team.points);
   }
 
   return (

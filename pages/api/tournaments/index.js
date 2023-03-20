@@ -6,16 +6,14 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const tournaments = await Tournament.find();
-      const tournamentsArray = tournaments.map((round) => {
-        return {
-          name: round.name,
-          id: round._id,
-          tournaments: round.tournaments,
-        };
-      });
+      const tournament = await Tournament.findOne({ name: "Goldbach" }).exec();
+      const tournamentData = {
+        name: tournament.name,
+        id: tournament._id,
+        rounds: tournament.rounds,
+      };
 
-      res.status(200).json(tournamentsArray);
+      res.status(200).json(tournamentData);
     } catch (error) {
       res.status(404).json(error);
     }
@@ -23,9 +21,9 @@ export default async function handler(req, res) {
     try {
       const data = req.body;
 
-      const Tournament = await Tournament.create(data);
+      const newTournament = await Tournament.create(data);
 
-      return res.status(201).json(Tournament);
+      return res.status(201).json(newTournament);
     } catch (error) {
       res.status(400).json(error);
     }
