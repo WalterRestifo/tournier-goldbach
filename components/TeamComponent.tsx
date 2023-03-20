@@ -30,9 +30,10 @@ export default function TeamComponent({
       }}
     >
       <div>
-        {team.players.map((player: MiniPlayer) => (
-          <MiniCard key={player.name} name={player.name} />
-        ))}
+        {team.players !== undefined &&
+          team.players.map((player: MiniPlayer) => (
+            <MiniCard key={player.name} name={player.name} />
+          ))}
       </div>
       <StyledDataWrapper>
         {isClickable && isClicked ? (

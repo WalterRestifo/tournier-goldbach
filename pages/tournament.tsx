@@ -42,11 +42,14 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
     e.stopPropagation();
 
     if (match.team1.points > match.team2.points) {
-      setNextRoundTeams([...nextRoundTeams, match.team1]);
+      const team1 = { ...match.team1, points: 0 };
+      const updatedMatch = [...nextRoundTeams, team1];
+      setNextRoundTeams(updatedMatch);
     } else {
-      setNextRoundTeams([...nextRoundTeams, match.team2]);
+      const team2 = { ...match.team2, points: 0 };
+      const updatedMatch = [...nextRoundTeams, team2];
+      setNextRoundTeams(updatedMatch);
     }
-    console.log("nextroundteams: ", nextRoundTeams);
   }
 
   useEffect(() => {
@@ -84,11 +87,26 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
         body: JSON.stringify(updatedTournament),
       });
     }
+    function createNextRoundMatches(teams: Team[]) {
+      let matches = [];
+
+      for (let i = 0; i < teams.length; i += 2) {
+        const match = {
+          team1: teams[i],
+          team2: teams[i + 1],
+          id: nanoid(),
+          winner: "",
+        };
+        matches.push(match);
+      }
+      return matches;
+    }
     if (
-      rounds.length &&
-      nextRoundTeams.length === rounds[rounds.length - 1].length / 2
+      rounds.length > 0 &&
+      nextRoundTeams.length === rounds[rounds.length - 1].length
     ) {
-      const updatedRounds = [...rounds, nextRoundTeams];
+      const nextRoundMatches = createNextRoundMatches(nextRoundTeams);
+      const updatedRounds = [...rounds, nextRoundMatches];
       setRounds(updatedRounds);
       setNextRoundTeams([]);
       updateRoundsInDB(updatedRounds);
@@ -162,7 +180,7 @@ const StyledDiv = styled.div`
   font-family: baloo_2;
   position: relative;
   overflow: hidden;
-  background-color: grey;
+  background-color: black;
 `;
 
 const StyledUl = styled.ul`
