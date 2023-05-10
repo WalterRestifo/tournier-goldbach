@@ -15,12 +15,21 @@ import createNextRoundMatches from "../utils/createNextRoundMatches";
 type TournamentProps = {
   rounds: any[][];
   setRounds: Function;
+  loserRounds: any[][];
+  setLoserRounds: Function;
 };
 
-export default function Tournament({ rounds, setRounds }: TournamentProps) {
+export default function Tournament({
+  rounds,
+  setRounds,
+  loserRounds,
+  setLoserRounds,
+}: TournamentProps) {
   const [isClicked, setIsClicked] = useState(false);
   const [nextRoundTeams, setNextRoundTeams] = useState<Team[]>([]);
+  const [loserNextRoundTeams, setLoserNextRoundTeams] = useState<Team[]>([]);
   const tournamentName = "goldbach";
+  const loserTournamentName = "goldbachLoser";
 
   function handleClick() {
     setIsClicked(!isClicked);
@@ -34,14 +43,18 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
   function handleDetermineWinner(e: any, match: Match) {
     e.stopPropagation();
 
+    const team1 = { ...match.team1, points: 0 };
+    const team2 = { ...match.team2, points: 0 };
     if (match.team1.points > match.team2.points) {
-      const team1 = { ...match.team1, points: 0 };
       const updatedMatch = [...nextRoundTeams, team1];
+      const updatedLoserMatch = [...loserNextRoundTeams, team2];
       setNextRoundTeams(updatedMatch);
+      setLoserNextRoundTeams(updatedLoserMatch);
     } else {
-      const team2 = { ...match.team2, points: 0 };
       const updatedMatch = [...nextRoundTeams, team2];
+      const updatedLoserMatch = [...loserNextRoundTeams, team1];
       setNextRoundTeams(updatedMatch);
+      setLoserNextRoundTeams(updatedLoserMatch);
     }
   }
 
@@ -53,19 +66,24 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
         const matchList = createNextRoundMatches(teams);
         setRounds([matchList]);
         postRound([matchList], tournamentName);
+        postRound([matchList], loserTournamentName);
       }
     }
 
-    async function manageGetRounds() {
-      const DBTournamentRounds = await getRounds(tournamentName);
+    async function manageGetRounds(
+      tournament: string,
+      stateSetterFunction: Function
+    ) {
+      const DBTournamentRounds = await getRounds(tournament);
       if (!DBTournamentRounds) {
         createTournamentAndManageDatabank();
       } else {
-        setRounds(DBTournamentRounds);
+        stateSetterFunction(DBTournamentRounds);
       }
     }
 
-    manageGetRounds();
+    manageGetRounds(tournamentName, setRounds);
+    manageGetRounds(loserTournamentName, setLoserRounds);
   }, []);
 
   useEffect(() => {
@@ -74,10 +92,15 @@ export default function Tournament({ rounds, setRounds }: TournamentProps) {
       nextRoundTeams.length === rounds[rounds.length - 1].length
     ) {
       const nextRoundMatches = createNextRoundMatches(nextRoundTeams);
+      const loserNextRoundMatches = createNextRoundMatches(loserNextRoundTeams);
       const updatedRounds = [...rounds, nextRoundMatches];
+      const loserUpdatedRounds = [...loserRounds, loserNextRoundMatches];
       setRounds(updatedRounds);
+      setLoserRounds(loserUpdatedRounds);
       setNextRoundTeams([]);
+      setLoserNextRoundTeams([]);
       updateTournamentRounds(tournamentName, updatedRounds);
+      updateTournamentRounds(loserTournamentName, loserUpdatedRounds);
     }
   }, [nextRoundTeams, rounds]);
 
@@ -157,7 +180,7 @@ const StyledDiv = styled.div`
   font-family: baloo_2;
   position: relative;
   overflow: hidden;
-  background-color: grey;
+  background-color: black;
 `;
 
 const StyledUl = styled.ul`

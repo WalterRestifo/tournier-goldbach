@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   });
   const [allPlayers, setAllPlayers] = useState<Member[]>([]);
   const [rounds, setRounds] = useState([]);
+  const [loserRounds, setLoserRounds] = useState([]);
 
   async function getAllPlayers(): Promise<void> {
     try {
@@ -44,6 +45,8 @@ export default function App({ Component, pageProps }: AppProps) {
       setAllPlayers={setAllPlayers}
       rounds={rounds}
       setRounds={setRounds}
+      loserRounds={loserRounds}
+      setLoserRounds={setLoserRounds}
     />
   );
 }
