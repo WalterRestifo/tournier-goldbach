@@ -1,6 +1,6 @@
-export default async function getRounds(): Promise<any> {
+export default async function getRounds(tournamentName: string): Promise<any> {
   try {
-    const response = await fetch("/api/tournaments");
+    const response = await fetch(`/api/tournaments/${tournamentName}`);
     if (!response.ok) {
       return console.error(
         "Error with the response of the tournament fetch. Response status: ",
@@ -8,7 +8,6 @@ export default async function getRounds(): Promise<any> {
       );
     } else {
       const tournament = await response.json();
-
       return tournament.rounds;
     }
   } catch (error) {

@@ -6,27 +6,28 @@ import MiniCard from "./MiniCard";
 type TeamProps = {
   team: Team;
   isClickable: boolean;
+  showPoints: boolean;
 };
 
 export default function TeamComponent({
   team,
   isClickable,
+  showPoints,
 }: TeamProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
 
-  function handleSubmit(e: any) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    const form = e.currentTarget;
-    team.points = parseInt(form.elements.points.value);
+    const pointsInput = e.target;
+    team.points = parseInt(pointsInput.value);
   }
 
   return (
     <StyledTeam
       key={team.id}
-      onClick={(e) => {
+      onClick={(e: any) => {
         setIsClicked(!isClicked);
         e.stopPropagation();
-        return;
       }}
     >
       <div>
@@ -37,29 +38,26 @@ export default function TeamComponent({
       </div>
       <StyledDataWrapper>
         {isClickable && isClicked ? (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => e.preventDefault()}>
             <label>
               Punkte:{" "}
               <StyledInput
-                onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                  e.stopPropagation()
-                }
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                  e.stopPropagation();
+                }}
+                onChange={handleChange}
                 type={"number"}
                 maxLength={2}
                 name="points"
+                autoFocus
                 placeholder={`${team.points}`}
               ></StyledInput>
             </label>
-            <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                e.stopPropagation()
-              }
-            >
-              Bestätigen
-            </button>
           </form>
-        ) : (
+        ) : showPoints ? (
           <StyledP>Punkte: {team.points}</StyledP>
+        ) : (
+          <p>Glückwunsch für den Sieg!</p>
         )}
       </StyledDataWrapper>
     </StyledTeam>
@@ -73,7 +71,8 @@ const StyledTeam = styled.div`
   padding-right: 1rem;
 
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: no-wrap;
   gap: 10px;
 
   /* From https://css.glass */
@@ -94,23 +93,6 @@ const StyledDataWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-`;
-
-const StyledButton = styled.button`
-  height: 7vh;
-  width: 26.7vw;
-  border-radius: 25px;
-  font-family: baloo_2;
-  font-size: 20px;
-  color: white;
-  /* background-color: transparent; */
-  border-color: white;
-  margin-bottom: 0.5rem;
-
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(5px);
 `;
 
 const StyledInput = styled.input`

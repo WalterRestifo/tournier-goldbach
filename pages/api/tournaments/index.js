@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const tournament = await Tournament.findOne({ name: "Goldbach" }).exec();
+      const tournament = await Tournament.findOne({ name: "goldbach" }).exec();
       const tournamentData = {
         name: tournament.name,
         id: tournament._id,
